@@ -1,0 +1,27 @@
+# Backend
+sarana-ai-take-home-test-be/.env
+sarana-ai-take-home-test-be/uploads/*
+!sarana-ai-take-home-test-be/uploads/.gitkeep
+
+# Frontend
+sarana-ai-take-home-test-fe/.env.local
+sarana-ai-take-home-test-fe/.next/
+sarana-ai-take-home-test-fe/node_modules/
+sarana-ai-take-home-test-fe/out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
