@@ -1,0 +1,460 @@
+basePath: /
+definitions:
+  models.BaseResponse:
+    properties:
+      data: {}
+      error:
+        $ref: '#/definitions/models.ErrorData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.ErrorData:
+    properties:
+      code:
+        type: string
+      details:
+        type: string
+      message:
+        type: string
+    type: object
+  models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.Note:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      image_path:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  services.NotesResponse:
+    properties:
+      limit:
+        type: integer
+      notes:
+        items:
+          $ref: '#/definitions/models.Note'
+        type: array
+      page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@sarana-ai.com
+    name: API Support
+  description: A notes management API with user authentication and image upload capabilities
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Notes API
+  version: "2.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with email and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Login user
+      tags:
+      - Authentication
+  /notes:
+    get:
+      description: Retrieve all notes for the authenticated user with optional search,
+        sorting, and pagination
+      parameters:
+      - description: Search in title and content
+        in: query
+        name: search
+        type: string
+      - default: created_at
+        description: Sort by field (created_at, updated_at, title)
+        in: query
+        name: sort_by
+        type: string
+      - default: DESC
+        description: Sort order (ASC, DESC)
+        in: query
+        name: order
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated list of notes
+          schema:
+            $ref: '#/definitions/services.NotesResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all notes
+      tags:
+      - Notes
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new note for the authenticated user with optional image
+        upload
+      parameters:
+      - description: Note title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Note content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: Optional image file
+        in: formData
+        name: image_path
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Note created successfully
+          schema:
+            $ref: '#/definitions/models.Note'
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new note
+      tags:
+      - Notes
+  /notes/{id}:
+    delete:
+      description: Delete a specific note by its ID (with ownership verification)
+      parameters:
+      - description: Note ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Note deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid note ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Note not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a note
+      tags:
+      - Notes
+    get:
+      description: Retrieve a specific note by its ID
+      parameters:
+      - description: Note ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Note details
+          schema:
+            $ref: '#/definitions/models.Note'
+        "400":
+          description: Invalid note ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Note not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get a note by ID
+      tags:
+      - Notes
+  /notes/{id}/image:
+    get:
+      description: Retrieve the image file attached to a specific note
+      parameters:
+      - description: Note ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+      responses:
+        "200":
+          description: Image file
+          schema:
+            type: file
+        "400":
+          description: Invalid note ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Note or image not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get note image
+      tags:
+      - Notes
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload an image file to attach to a specific note
+      parameters:
+      - description: Note ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Image file to upload
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Image uploaded successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request or file type
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Note not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Upload an image to a note
+      tags:
+      - Notes
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account with email and password
+      parameters:
+      - description: Registration credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User registered successfully
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "409":
+          description: Email already exists
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Register a new user
+      tags:
+      - Authentication
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
