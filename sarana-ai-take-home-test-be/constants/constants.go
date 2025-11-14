@@ -1,6 +1,5 @@
 package constants
 
-// HTTP Status Messages
 const (
 	ErrInvalidRequestBody = "Invalid request body"
 	ErrHashingPassword    = "Error hashing password"
@@ -20,14 +19,12 @@ const (
 	ErrInvalidNoteID      = "Invalid note ID"
 )
 
-// File Upload
 const (
 	MaxFileSize       = 5 * 1024 * 1024 // 5MB
 	AllowedImageTypes = ".jpg,.jpeg,.png,.gif"
 	UploadDir         = "./uploads"
 )
 
-// JWT
 const (
 	JWTExpiration = 24 // hours
 )
