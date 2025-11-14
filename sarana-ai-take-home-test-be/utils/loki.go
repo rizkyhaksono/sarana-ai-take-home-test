@@ -13,7 +13,6 @@ import (
 
 var LokiClient *loki.Client
 
-// InitLoki initializes the Grafana Loki client
 func InitLoki() error {
 	lokiHost := os.Getenv("LOKI_HOST")
 	if lokiHost == "" {
