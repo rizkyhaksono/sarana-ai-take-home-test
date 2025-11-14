@@ -11,7 +11,7 @@ type Note struct {
 	UserID    uuid.UUID `json:"user_id"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
-	ImagePath string    `json:"image_path,omitempty"`
+	ImagePath *string   `json:"image_path,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
