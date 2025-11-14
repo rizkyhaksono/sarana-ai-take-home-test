@@ -14,9 +14,9 @@ var DB *sql.DB
 func Connect() error {
 	host := getEnv("DB_HOST", "localhost")
 	port := getEnv("DB_PORT", "5432")
-	user := getEnv("DB_USER", "postgres")
-	password := getEnv("DB_PASSWORD", "postgres")
-	dbname := getEnv("DB_NAME", "notesapp")
+	user := getEnv("DB_USER", "root")
+	password := getEnv("DB_PASSWORD", "root")
+	dbname := getEnv("DB_NAME", "sarana-notesapp")
 
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)

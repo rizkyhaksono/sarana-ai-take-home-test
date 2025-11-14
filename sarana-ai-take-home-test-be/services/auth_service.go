@@ -19,13 +19,11 @@ func NewAuthService() *AuthService {
 }
 
 func (s *AuthService) Register(email, password string) (*models.User, string, error) {
-	// Hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, "", errors.New(constants.ErrHashingPassword)
 	}
 
-	// Insert user into database
 	var user models.User
 	err = database.DB.QueryRow(
 		"INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email, created_at",
@@ -39,7 +37,6 @@ func (s *AuthService) Register(email, password string) (*models.User, string, er
 		return nil, "", errors.New(constants.ErrCreatingUser)
 	}
 
-	// Generate JWT token
 	token, err := utils.GenerateJWT(user.ID.String(), user.Email)
 	if err != nil {
 		return nil, "", errors.New(constants.ErrGeneratingToken)
@@ -52,7 +49,6 @@ func (s *AuthService) Login(email, password string) (*models.User, string, error
 	var user models.User
 	var hashedPassword string
 
-	// Get user from database
 	err := database.DB.QueryRow(
 		"SELECT id, email, password, created_at FROM users WHERE email = $1",
 		email,
@@ -65,13 +61,11 @@ func (s *AuthService) Login(email, password string) (*models.User, string, error
 		return nil, "", errors.New(constants.ErrUserNotFound)
 	}
 
-	// Verify password
 	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	if err != nil {
 		return nil, "", errors.New(constants.ErrInvalidCredentials)
 	}
 
-	// Generate JWT token
 	token, err := utils.GenerateJWT(user.ID.String(), user.Email)
 	if err != nil {
 		return nil, "", errors.New(constants.ErrGeneratingToken)
