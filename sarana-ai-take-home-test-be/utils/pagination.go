@@ -68,14 +68,21 @@ func BuildPaginatedQuery(
 	argIndex := len(baseArgs) + 1
 
 	// Add WHERE condition
+	hasWhere := false
 	if whereCondition != "" {
 		query += " WHERE " + whereCondition
 		count += " WHERE " + whereCondition
+		hasWhere = true
 	}
 
 	// Add search condition if search parameter is provided
 	if params.Search != "" && len(searchFields) > 0 {
-		searchCondition := " AND ("
+		connector := " AND "
+		if !hasWhere {
+			connector = " WHERE "
+			hasWhere = true
+		}
+		searchCondition := connector + "("
 		for i, field := range searchFields {
 			if i > 0 {
 				searchCondition += " OR "
