@@ -26,5 +26,5 @@ const (
 )
 
 const (
-	JWTExpiration = 24 // hours
+	JWTExpiration = 168 // hours
 )
