@@ -19,6 +19,27 @@ definitions:
       message:
         type: string
     type: object
+  models.Log:
+    properties:
+      created_at:
+        type: string
+      datetime:
+        type: string
+      endpoint:
+        type: string
+      headers:
+        type: string
+      id:
+        type: integer
+      method:
+        type: string
+      request_body:
+        type: string
+      response_body:
+        type: string
+      status_code:
+        type: integer
+    type: object
   models.LoginRequest:
     properties:
       email:
@@ -56,6 +77,21 @@ definitions:
     required:
     - email
     - password
+    type: object
+  services.LogsResponse:
+    properties:
+      limit:
+        type: integer
+      logs:
+        items:
+          $ref: '#/definitions/models.Log'
+        type: array
+      page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
     type: object
   services.NotesResponse:
     properties:
@@ -119,6 +155,104 @@ paths:
       summary: Login user
       tags:
       - Authentication
+  /logs:
+    get:
+      description: Retrieve all application logs with optional search, sorting, and
+        pagination
+      parameters:
+      - description: Search in method, endpoint, request_body, response_body
+        in: query
+        name: search
+        type: string
+      - default: datetime
+        description: Sort by field (datetime, created_at, method, endpoint, status_code)
+        in: query
+        name: sort_by
+        type: string
+      - default: DESC
+        description: Sort order (ASC, DESC)
+        in: query
+        name: order
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated list of logs
+          schema:
+            $ref: '#/definitions/services.LogsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all logs
+      tags:
+      - Logs
+  /logs/{id}:
+    get:
+      description: Retrieve a specific log entry by its ID
+      parameters:
+      - description: Log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Log details
+          schema:
+            $ref: '#/definitions/models.Log'
+        "400":
+          description: Invalid log ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Log not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get a log by ID
+      tags:
+      - Logs
   /notes:
     get:
       description: Retrieve all notes for the authenticated user with optional search,
