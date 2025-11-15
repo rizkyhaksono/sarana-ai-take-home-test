@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthCookie } from "./lib/cookie";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 const protectedRoutes = [
-  '/dashboard'
+  '/dashboard',
+  '/logs'
 ];
 
 const authRoutes = [
@@ -12,10 +12,14 @@ const authRoutes = [
   '/register'
 ];
 
-async function validateToken(): Promise<boolean> {
+function getTokenFromRequest(request: NextRequest): string | null {
+  const cookieHeader = request.cookies.get('sarana-note-app-auth');
+  return cookieHeader?.value || null;
+}
+
+async function validateToken(token: string): Promise<boolean> {
   try {
-    const token = getAuthCookie()?.token;
-    const res = await fetch(`${API_URL}/notes`, {
+    const res = await fetch(`${API_URL}/me`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -33,12 +37,24 @@ export async function proxy(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isAuthRoute = authRoutes.includes(pathname);
 
-  if (isProtectedRoute && !(await validateToken())) {
-    return NextResponse.next();
+  // Get token from cookies
+  const token = getTokenFromRequest(request);
+
+  // Check if token exists and is valid
+  const isAuthenticated = token ? await validateToken(token) : false;
+
+  // If accessing protected route without valid token, redirect to login
+  if (isProtectedRoute && !isAuthenticated) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
   }
 
-  if (isAuthRoute) {
-    return NextResponse.next();
+  // If accessing auth routes (login/register) with valid token, redirect to dashboard
+  if (isAuthRoute && isAuthenticated) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
