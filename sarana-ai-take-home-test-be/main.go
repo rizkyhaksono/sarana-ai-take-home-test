@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/database"
+	"github.com/rizkyhaksono/sarana-ai-take-home-test/docs"
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/middleware"
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/routes"
 
@@ -48,6 +49,16 @@ func main() {
 	// 	log.Println("Continuing without Loki logging...")
 	// }
 	// defer utils.StopLoki()
+
+	host := getEnv("SWAGGER_HOST", "40.90.171.103:36322")
+	docs.SwaggerInfo.Host = host
+
+	schemes := getEnv("SWAGGER_SCHEMES", "http")
+	if schemes == "https" {
+		docs.SwaggerInfo.Schemes = []string{"https", "http"}
+	} else {
+		docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	}
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
