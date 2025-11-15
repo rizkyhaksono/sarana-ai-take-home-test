@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { Trash2, Upload, Image as ImageIcon } from 'lucide-react'
-import { Note } from '@/hooks/use-notes'
-import { useDeleteNote, useUploadNoteImage } from '@/hooks/use-notes'
+import { Note } from '@/types'
+import { useDeleteNote, useUploadNoteImage } from '@/services/notes/notes.service'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import Image from 'next/image'
 
 interface NoteCardProps {
   note: Note
@@ -19,12 +20,18 @@ interface NoteCardProps {
 
 export function NoteCard({ note }: NoteCardProps) {
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const { mutate: deleteNote, isPending: isDeleting } = useDeleteNote()
-  const { mutate: uploadImage, isPending: isUploading } = useUploadNoteImage()
+  const deleteNoteMutation = useDeleteNote()
+  const uploadImageMutation = useUploadNoteImage()
 
-  const handleDelete = () => {
+  const isLoading = deleteNoteMutation.isPending || uploadImageMutation.isPending
+
+  const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this note?')) {
-      deleteNote(note.id)
+      try {
+        await deleteNoteMutation.mutateAsync(note.id)
+      } catch (err) {
+        console.error('Failed to delete note:', err)
+      }
     }
   }
 
@@ -34,13 +41,14 @@ export function NoteCard({ note }: NoteCardProps) {
     }
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (imageFile) {
-      uploadImage({ id: note.id, file: imageFile }, {
-        onSuccess: () => {
-          setImageFile(null)
-        },
-      })
+      try {
+        await uploadImageMutation.mutateAsync({ noteId: note.id, file: imageFile })
+        setImageFile(null)
+      } catch (err) {
+        console.error('Failed to upload image:', err)
+      }
     }
   }
 
@@ -50,10 +58,10 @@ export function NoteCard({ note }: NoteCardProps) {
         <CardTitle className="flex items-center justify-between">
           <span className="truncate">{note.title}</span>
           <Button
-            variant="ghost"
+            variant={'default'}
             size="icon"
             onClick={handleDelete}
-            disabled={isDeleting}
+            disabled={isLoading}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -65,10 +73,11 @@ export function NoteCard({ note }: NoteCardProps) {
         </p>
         {note.image_path && (
           <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-            <img
+            <Image
               src={`http://localhost:8080/${note.image_path}`}
               alt={note.title}
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
             />
           </div>
         )}
@@ -79,7 +88,7 @@ export function NoteCard({ note }: NoteCardProps) {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            disabled={isUploading}
+            disabled={isLoading}
             className="hidden"
             id={`file-${note.id}`}
           />
@@ -89,9 +98,9 @@ export function NoteCard({ note }: NoteCardProps) {
           >
             <Button
               type="button"
-              variant="outline"
+              variant={"default"}
               className="w-full"
-              disabled={isUploading}
+              disabled={isLoading}
               asChild
             >
               <span>
@@ -103,7 +112,7 @@ export function NoteCard({ note }: NoteCardProps) {
           {imageFile && (
             <Button
               onClick={handleUpload}
-              disabled={isUploading}
+              disabled={isLoading}
               size="icon"
             >
               <Upload className="h-4 w-4" />

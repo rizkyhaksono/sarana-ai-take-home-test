@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useCreateNote } from '@/hooks/use-notes'
+import { useCreateNote } from '@/services/notes/notes.service'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,20 +20,18 @@ export function CreateNoteForm({ onSuccess }: CreateNoteFormProps) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
 
-  const { mutate: createNote, isPending, error } = useCreateNote()
+  const createNoteMutation = useCreateNote()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    createNote(
-      { title, content },
-      {
-        onSuccess: () => {
-          setTitle('')
-          setContent('')
-          onSuccess?.()
-        },
-      }
-    )
+    try {
+      await createNoteMutation.mutateAsync({ title, content })
+      setTitle('')
+      setContent('')
+      onSuccess?.()
+    } catch (err) {
+      console.error('Failed to create note:', err)
+    }
   }
 
   return (
@@ -43,9 +41,9 @@ export function CreateNoteForm({ onSuccess }: CreateNoteFormProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
+          {createNoteMutation.error && (
             <div className="rounded-lg bg-destructive/15 p-3 text-sm text-destructive">
-              {error.message}
+              {createNoteMutation.error.message}
             </div>
           )}
           <div className="space-y-2">
@@ -56,7 +54,7 @@ export function CreateNoteForm({ onSuccess }: CreateNoteFormProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              disabled={isPending}
+              disabled={createNoteMutation.isPending}
             />
           </div>
           <div className="space-y-2">
@@ -67,12 +65,12 @@ export function CreateNoteForm({ onSuccess }: CreateNoteFormProps) {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
-              disabled={isPending}
+              disabled={createNoteMutation.isPending}
               className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             />
           </div>
-          <Button type="submit" disabled={isPending} className="w-full">
-            {isPending ? 'Creating...' : 'Create Note'}
+          <Button type="submit" disabled={createNoteMutation.isPending} className="w-full">
+            {createNoteMutation.isPending ? 'Creating...' : 'Create Note'}
           </Button>
         </form>
       </CardContent>
