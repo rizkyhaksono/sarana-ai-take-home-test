@@ -35,6 +35,7 @@ func JWTAuth(c *fiber.Ctx) error {
 	// Store user info in context
 	c.Locals("userID", claims.UserID)
 	c.Locals("email", claims.Email)
+	c.Locals("userToken", token)
 
 	return c.Next()
 }

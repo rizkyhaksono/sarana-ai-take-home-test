@@ -30,6 +30,10 @@ func SetupRoutes(app *fiber.App) {
 	// Protected routes - Logs
 	logs := app.Group("/logs", middleware.JWTAuth)
 
+	// Protected routes - Profile
+	me := app.Group("/me", middleware.JWTAuth)
+	me.Get("/", handlers.GetUserProfile)
+
 	logs.Get("/", handlers.GetLogs)
 	logs.Get("/:id", handlers.GetLog)
 

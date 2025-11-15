@@ -17,6 +17,7 @@ const (
 	ErrSavingFile         = "Error saving file"
 	ErrUpdatingNote       = "Error updating note"
 	ErrInvalidNoteID      = "Invalid note ID"
+	ErrInvalidToken       = "Invalid token"
 )
 
 const (

@@ -73,3 +73,21 @@ func (s *AuthService) Login(email, password string) (*models.User, string, error
 
 	return &user, token, nil
 }
+
+func (s *AuthService) UserProfile(userID string) (*models.User, error) {
+	var user models.User
+	err := database.DB.QueryRow(
+		"SELECT id, email, created_at FROM users WHERE id = $1",
+		userID,
+	).Scan(&user.ID, &user.Email, &user.CreatedAt)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New(constants.ErrUserNotFound)
+		}
+
+		return nil, errors.New(constants.ErrUserNotFound)
+	}
+
+	return &user, nil
+}

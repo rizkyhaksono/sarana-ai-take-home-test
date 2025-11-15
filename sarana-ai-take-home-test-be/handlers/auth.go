@@ -104,3 +104,37 @@ func Login(c *fiber.Ctx) error {
 		}),
 	)
 }
+
+// Profile handles user authentication
+// @Summary Profile user
+// @Description Authenticate user with bearertoken
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.BaseResponse "User profile fetched successfully"
+// @Failure 400 {object} models.BaseResponse "Invalid request body"
+// @Failure 401 {object} models.BaseResponse "Unauthorized"
+// @Failure 500 {object} models.BaseResponse "Internal server error"
+// @Router /me [get]
+func GetUserProfile(c *fiber.Ctx) error {
+	userID, ok := c.Locals("userID").(string)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(
+			models.ErrorResponse("INVALID_TOKEN", constants.ErrInvalidToken, "User ID not found in context"),
+		)
+	}
+
+	user, err := authService.UserProfile(userID)
+
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(
+			models.ErrorResponse("INVALID_TOKEN", constants.ErrInvalidToken, err.Error()),
+		)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(
+		models.SuccessResponse("User profile fetched successfully", fiber.Map{
+			"user": user,
+		}),
+	)
+}

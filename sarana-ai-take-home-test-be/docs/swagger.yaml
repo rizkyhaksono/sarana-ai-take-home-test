@@ -253,6 +253,33 @@ paths:
       summary: Get a log by ID
       tags:
       - Logs
+  /me:
+    get:
+      consumes:
+      - application/json
+      description: Authenticate user with bearertoken
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile fetched successfully
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Profile user
+      tags:
+      - Authentication
   /notes:
     get:
       description: Retrieve all notes for the authenticated user with optional search,
