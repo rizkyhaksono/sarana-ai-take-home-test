@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useRegister } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,59 +14,39 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { useLogin } from '@/services/auth/auth.service'
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [validationError, setValidationError] = useState('')
 
-  const { mutate: register, isPending, error } = useRegister()
+  const { mutateAsync: login, error, isPending } = useLogin()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setValidationError('')
-
-    if (password !== confirmPassword) {
-      setValidationError('Passwords do not match')
-      return
-    }
-
-    if (password.length < 6) {
-      setValidationError('Password must be at least 6 characters')
-      return
-    }
-
-    register(
-      { email, password },
-      {
-        onSuccess: () => {
-          router.push('/dashboard')
-        },
+    await login({ email, password }, {
+      onSuccess: () => {
+        router.push('/dashboard')
       }
-    )
+    })
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      <Card className="w-full max-w-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
+          <CardTitle className="text-2xl font-bold">Login</CardTitle>
           <CardDescription>
-            Enter your email and password to create your account
+            Enter your email and password to access your notes
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {(error || validationError) && (
-              <div className="rounded-lg bg-destructive/15 p-3 text-sm text-destructive">
-                {validationError || error?.message}
+            {error && (
+              <div className="rounded-lg bg-red-500/15 p-3 text-sm text-destructive">
+                {error.message}
               </div>
             )}
             <div className="space-y-2">
@@ -94,34 +73,22 @@ export default function RegisterPage() {
                 disabled={isPending}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                disabled={isPending}
-              />
-            </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 mt-4">
             <Button
               type="submit"
               className="w-full"
               disabled={isPending}
             >
-              {isPending ? 'Creating account...' : 'Create account'}
+              {isPending ? 'Logging in...' : 'Login'}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              {`Don't have an account? `}
               <Link
-                href="/login"
+                href="/register"
                 className="font-medium text-primary hover:underline"
               >
-                Login
+                Register
               </Link>
             </p>
           </CardFooter>
