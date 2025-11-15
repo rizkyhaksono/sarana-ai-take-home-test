@@ -38,12 +38,11 @@ export const useGetLogs = (params?: PaginationParams) => {
 
       return await res.json() as LogsResponse;
     },
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   });
 };
 
-// Get single log
-export const useGetLog = (id: number, enabled = true) => {
+export const useGetLogById = (id: number, enabled = true) => {
   return useQuery({
     queryKey: logsKeys.detail(id),
     queryFn: async () => {
