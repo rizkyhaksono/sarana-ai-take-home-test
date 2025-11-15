@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/constants"
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/database"
@@ -61,16 +62,17 @@ func (s *LogService) GetLogsWithParams(params utils.PaginationParams) (*LogsResp
 	// Execute query
 	rows, err := database.DB.Query(query, args...)
 	if err != nil {
-		return nil, errors.New("failed to fetch logs")
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 	defer rows.Close()
 
-	var logs []models.Log
+	// Initialize logs slice to avoid nil
+	logs := make([]models.Log, 0)
 	for rows.Next() {
 		var log models.Log
 		var headers, requestBody, responseBody sql.NullString
 		if err := rows.Scan(&log.ID, &log.Datetime, &log.Method, &log.Endpoint, &headers, &requestBody, &responseBody, &log.StatusCode, &log.CreatedAt); err != nil {
-			return nil, errors.New("failed to fetch logs")
+			return nil, fmt.Errorf("failed to scan log row: %w", err)
 		}
 		if headers.Valid {
 			log.Headers = headers.String
@@ -84,6 +86,11 @@ func (s *LogService) GetLogsWithParams(params utils.PaginationParams) (*LogsResp
 		logs = append(logs, log)
 	}
 
+	// Check for errors from iterating over rows
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error during row iteration: %w", err)
+	}
+
 	// Calculate pagination metadata
 	paginationMeta := utils.CalculatePaginationMetadata(total, params.Page, params.Limit)
 
@@ -93,7 +100,7 @@ func (s *LogService) GetLogsWithParams(params utils.PaginationParams) (*LogsResp
 	}, nil
 }
 
-func (s *LogService) GetLogByID(logID int) (*models.Log, error) {
+func (s *LogService) GetLogByID(logID string) (*models.Log, error) {
 	var log models.Log
 	var headers, requestBody, responseBody sql.NullString
 	err := database.DB.QueryRow(

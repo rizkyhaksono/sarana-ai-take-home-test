@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Log struct {
-	ID           int       `json:"id"`
+	ID           string    `json:"id"`
 	Datetime     time.Time `json:"datetime"`
 	Method       string    `json:"method"`
 	Endpoint     string    `json:"endpoint"`

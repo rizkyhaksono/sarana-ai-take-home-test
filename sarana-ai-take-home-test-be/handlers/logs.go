@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/models"
 	"github.com/rizkyhaksono/sarana-ai-take-home-test/services"
@@ -53,7 +51,7 @@ func GetLogs(c *fiber.Ctx) error {
 // @Tags Logs
 // @Produce json
 // @Security BearerAuth
-// @Param id path int true "Log ID"
+// @Param id path string true "Log ID"
 // @Success 200 {object} models.Log "Log details"
 // @Failure 400 {object} map[string]string "Invalid log ID"
 // @Failure 401 {object} map[string]string "Unauthorized"
@@ -61,8 +59,8 @@ func GetLogs(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /logs/{id} [get]
 func GetLog(c *fiber.Ctx) error {
-	logID, err := strconv.Atoi(c.Params("id"))
-	if err != nil {
+	logID := c.Params("id")
+	if logID == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid log ID",
 		})
