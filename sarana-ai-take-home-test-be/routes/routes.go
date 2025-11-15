@@ -23,6 +23,7 @@ func SetupRoutes(app *fiber.App) {
 	api.Post("/", handlers.CreateNote)
 	api.Get("/", handlers.GetNotes)
 	api.Get("/:id", handlers.GetNote)
+	api.Put("/:id", handlers.UpdateNote)
 	api.Delete("/:id", handlers.DeleteNote)
 	api.Post("/:id/image", handlers.UploadNoteImage)
 	api.Get("/:id/image", handlers.GetNoteImage)

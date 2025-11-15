@@ -96,6 +96,100 @@ func (s *NoteService) CreateNoteWithImage(userID uuid.UUID, title, content strin
 	return note, nil
 }
 
+func (s *NoteService) UpdateNote(noteID, userID uuid.UUID, title, content string) (*models.Note, error) {
+	// Verify ownership first
+	existingNote, err := s.GetNoteByID(noteID, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var imagePath sql.NullString
+	err = database.DB.QueryRow(
+		"UPDATE notes SET title = $1, content = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3 AND user_id = $4 RETURNING id, user_id, title, content, image_path, created_at, updated_at",
+		title, content, noteID, userID,
+	).Scan(&existingNote.ID, &existingNote.UserID, &existingNote.Title, &existingNote.Content, &imagePath, &existingNote.CreatedAt, &existingNote.UpdatedAt)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New(constants.ErrNoteNotFound)
+		}
+		return nil, fmt.Errorf("%s: %v", constants.ErrUpdatingNote, err)
+	}
+
+	if imagePath.Valid {
+		existingNote.ImagePath = &imagePath.String
+	}
+
+	return existingNote, nil
+}
+
+func (s *NoteService) UpdateNoteWithImage(noteID, userID uuid.UUID, title, content string, file *multipart.FileHeader) (*models.Note, error) {
+	// Verify ownership first
+	existingNote, err := s.GetNoteByID(noteID, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Validate file type
+	ext := strings.ToLower(filepath.Ext(file.Filename))
+	if !strings.Contains(constants.AllowedImageTypes, ext) {
+		return nil, errors.New(constants.ErrInvalidFileType)
+	}
+
+	// Create upload directory if it doesn't exist
+	if err := os.MkdirAll(constants.UploadDir, 0755); err != nil {
+		return nil, errors.New(constants.ErrSavingFile)
+	}
+
+	// Generate new filename
+	filename := fmt.Sprintf("%s%s", uuid.New().String(), ext)
+	filePath := filepath.Join(constants.UploadDir, filename)
+
+	// Save the file
+	src, err := file.Open()
+	if err != nil {
+		return nil, errors.New(constants.ErrSavingFile)
+	}
+	defer src.Close()
+
+	dst, err := os.Create(filePath)
+	if err != nil {
+		return nil, errors.New(constants.ErrSavingFile)
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, src); err != nil {
+		return nil, errors.New(constants.ErrSavingFile)
+	}
+
+	// Update database with new image path
+	var imagePath sql.NullString
+	err = database.DB.QueryRow(
+		"UPDATE notes SET title = $1, content = $2, image_path = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4 AND user_id = $5 RETURNING id, user_id, title, content, image_path, created_at, updated_at",
+		title, content, filePath, noteID, userID,
+	).Scan(&existingNote.ID, &existingNote.UserID, &existingNote.Title, &existingNote.Content, &imagePath, &existingNote.CreatedAt, &existingNote.UpdatedAt)
+
+	if err != nil {
+		// Clean up uploaded file if database update fails
+		_ = os.Remove(filePath)
+		if err == sql.ErrNoRows {
+			return nil, errors.New(constants.ErrNoteNotFound)
+		}
+		return nil, fmt.Errorf("%s: %v", constants.ErrUpdatingNote, err)
+	}
+
+	// Remove old image if it exists
+	if existingNote.ImagePath != nil && *existingNote.ImagePath != "" && *existingNote.ImagePath != filePath {
+		_ = os.Remove(*existingNote.ImagePath)
+	}
+
+	if imagePath.Valid {
+		existingNote.ImagePath = &imagePath.String
+	}
+
+	return existingNote, nil
+}
+
 func (s *NoteService) GetNotesByUserID(userID uuid.UUID) ([]models.Note, error) {
 	rows, err := database.DB.Query(
 		"SELECT id, user_id, title, content, image_path, created_at, updated_at FROM notes WHERE user_id = $1 ORDER BY created_at DESC",

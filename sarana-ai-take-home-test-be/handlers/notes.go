@@ -20,7 +20,7 @@ var noteService = services.NewNoteService()
 // @Security BearerAuth
 // @Param title formData string true "Note title"
 // @Param content formData string true "Note content"
-// @Param image_path formData file false "Optional image file"
+// @Param image formData file false "Optional image file"
 // @Success 201 {object} models.Note "Note created successfully"
 // @Failure 400 {object} map[string]string "Invalid request body"
 // @Failure 401 {object} map[string]string "Unauthorized"
@@ -43,7 +43,7 @@ func CreateNote(c *fiber.Ctx) error {
 		)
 	}
 
-	file, err := c.FormFile("image_path")
+	file, err := c.FormFile("image")
 	if err == nil && file != nil {
 		note, err := noteService.CreateNoteWithImage(userID, title, content, file)
 		if err != nil {
@@ -142,16 +142,96 @@ func GetNote(c *fiber.Ctx) error {
 	note, err := noteService.GetNoteByID(noteID, userID)
 	if err != nil {
 		if err.Error() == constants.ErrNoteNotFound {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			return c.Status(fiber.StatusInternalServerError).JSON(
+				models.ErrorResponse("GET_NOTE_ERROR", "Failed to retrieve note", err.Error()),
+			)
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			models.ErrorResponse("GET_NOTE_ERROR", "Failed to retrieve note", err.Error()),
+		)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(note)
+	return c.Status(fiber.StatusOK).JSON(
+		models.SuccessResponse("Note retrieved successfully", note),
+	)
+}
+
+// UpdateNote updates a note by ID
+// @Summary Update a note
+// @Description Update a specific note by its ID with optional image upload
+// @Tags Notes
+// @Accept multipart/form-data
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Note ID (UUID)"
+// @Param title formData string true "Note title"
+// @Param content formData string true "Note content"
+// @Param image formData file false "Optional image file"
+// @Success 200 {object} models.Note "Note updated successfully"
+// @Failure 400 {object} map[string]string "Invalid request body"
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 404 {object} map[string]string "Note not found"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /notes/{id} [put]
+func UpdateNote(c *fiber.Ctx) error {
+	userID, err := uuid.Parse(c.Locals("userID").(string))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(
+			models.ErrorResponse("INVALID_USER", "Invalid user ID", constants.ErrInvalidRequestBody),
+		)
+	}
+
+	noteID, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(
+			models.ErrorResponse("INVALID_NOTE_ID", "Invalid note ID", constants.ErrInvalidNoteID),
+		)
+	}
+
+	title := c.FormValue("title")
+	content := c.FormValue("content")
+
+	if title == "" || content == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(
+			models.ErrorResponse("INVALID_INPUT", "Title and content are required", constants.ErrInvalidRequestBody),
+		)
+	}
+
+	// Check if file is uploaded
+	file, err := c.FormFile("image")
+	if err == nil && file != nil {
+		note, err := noteService.UpdateNoteWithImage(noteID, userID, title, content, file)
+		if err != nil {
+			if err.Error() == constants.ErrNoteNotFound {
+				return c.Status(fiber.StatusNotFound).JSON(
+					models.ErrorResponse("NOTE_NOT_FOUND", err.Error(), "Note not found or access denied"),
+				)
+			}
+			return c.Status(fiber.StatusInternalServerError).JSON(
+				models.ErrorResponse("UPDATE_NOTE_ERROR", "Failed to update note", err.Error()),
+			)
+		}
+		return c.Status(fiber.StatusOK).JSON(
+			models.SuccessResponse("Note updated successfully", note),
+		)
+	}
+
+	// Update without image
+	note, err := noteService.UpdateNote(noteID, userID, title, content)
+	if err != nil {
+		if err.Error() == constants.ErrNoteNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(
+				models.ErrorResponse("NOTE_NOT_FOUND", err.Error(), "Note not found or access denied"),
+			)
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			models.ErrorResponse("UPDATE_NOTE_ERROR", "Failed to update note", err.Error()),
+		)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(
+		models.SuccessResponse("Note updated successfully", note),
+	)
 }
 
 // DeleteNote deletes a note by ID (with ownership check)
