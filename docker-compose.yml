@@ -1,10 +1,10 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: notes-db
+    container_name: sarana-notes-db
     environment:
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_PASSWORD: roots
       POSTGRES_DB: sarana-notesapp
     ports:
       - "5432:5432"
@@ -20,7 +20,7 @@ services:
     build:
       context: ./sarana-ai-take-home-test-be
       dockerfile: ../sarana-ai-take-home-test-misc/Dockerfile.be
-    container_name: notes-backend
+    container_name: sarana-notes-be
     ports:
       - "8080:8080"
     environment:
@@ -41,7 +41,7 @@ services:
     build:
       context: ./sarana-ai-take-home-test-fe
       dockerfile: ../sarana-ai-take-home-test-misc/Dockerfile.fe
-    container_name: notes-frontend
+    container_name: sarana-notes-fe
     ports:
       - "3000:3000"
     environment:
