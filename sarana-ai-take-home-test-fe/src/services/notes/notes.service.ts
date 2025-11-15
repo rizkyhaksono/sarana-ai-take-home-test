@@ -69,10 +69,19 @@ export const useCreateNote = () => {
 
   return useMutation({
     mutationFn: async (data: CreateNoteRequest) => {
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('content', data.content);
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+
       const res = await fetch(`${BASE_API}/notes`, {
         method: "POST",
-        headers: await baseHeaders(),
-        body: JSON.stringify(data),
+        headers: {
+          'Authorization': `Bearer ${getAuthCookie()?.token}`,
+        },
+        body: formData,
       });
 
       if (!res.ok) {
@@ -94,10 +103,19 @@ export const useUpdateNote = () => {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: CreateNoteRequest }) => {
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('content', data.content);
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+
       const res = await fetch(`${BASE_API}/notes/${id}`, {
         method: "PUT",
-        headers: await baseHeaders(),
-        body: JSON.stringify(data),
+        headers: {
+          'Authorization': `Bearer ${getAuthCookie()?.token}`,
+        },
+        body: formData,
       });
 
       if (!res.ok) {
@@ -168,3 +186,23 @@ export const useUploadNoteImage = () => {
     },
   });
 };
+
+export const useGetNoteImage = (noteId: string, enabled = true) => {
+  return useQuery({
+    queryKey: ['note-image', noteId],
+    queryFn: async () => {
+      const res = await fetch(`${BASE_API}/notes/${noteId}/image`, {
+        method: "GET",
+        headers: await baseHeaders(),
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to fetch note image");
+      }
+      const blob = await res.blob();
+      return URL.createObjectURL(blob);
+    },
+    enabled: !!noteId && enabled,
+    staleTime: 30000,
+  });
+}
