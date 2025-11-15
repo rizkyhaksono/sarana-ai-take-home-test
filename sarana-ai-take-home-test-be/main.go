@@ -62,9 +62,11 @@ func main() {
 	})
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: getEnv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8080"),
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS",
+		AllowOrigins:     getEnv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8080"),
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization, X-Requested-With, X-Request-ID, X-Client-Version",
+		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+		AllowCredentials: false,
+		ExposeHeaders:    "Content-Length, Content-Type",
 	}))
 
 	app.Use(middleware.Logger())
