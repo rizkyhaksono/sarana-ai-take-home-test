@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: notes-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: sarana-notesapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./sarana-ai-take-home-test-be
+      dockerfile: ../sarana-ai-take-home-test-misc/Dockerfile.be
+    container_name: notes-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: sarana-notesapp
+      JWT_SECRET: bahayabangetkaloketauan123
+      PORT: 8080
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./sarana-ai-take-home-test-be/uploads:/root/uploads
+
+  frontend:
+    build:
+      context: ./sarana-ai-take-home-test-fe
+      dockerfile: ../sarana-ai-take-home-test-misc/Dockerfile.fe
+    container_name: notes-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
