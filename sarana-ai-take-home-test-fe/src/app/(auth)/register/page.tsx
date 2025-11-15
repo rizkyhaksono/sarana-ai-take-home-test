@@ -59,7 +59,7 @@ export default function RegisterPage() {
           <CardContent className="space-y-4">
             {(error || validationError) && (
               <div className="rounded-lg bg-red-500/15 p-3 text-sm text-destructive">
-                {validationError || error.message}
+                {error?.message}
               </div>
             )}
             <div className="space-y-2">

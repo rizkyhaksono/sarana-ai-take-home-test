@@ -1,6 +1,6 @@
 import { LoginRequest, RegisterRequest, User } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { BASE_API } from "../api.config";
+import { BASE_API, baseHeaders } from "../api.config";
 import { getAuthCookie, setAuthCookie } from "@/lib/cookie";
 
 interface AuthResponse {
@@ -78,28 +78,23 @@ export const useLogout = () => {
   });
 };
 
-
 export const useAuth = () => {
   return useQuery({
     queryKey: authKeys.user,
     queryFn: async () => {
-      const token = getAuthCookie();
-
-      if (!token) throw new Error('No token found');
-
-      const res = await fetch(`${BASE_API}/notes`, {
+      const res = await fetch(`${BASE_API}/me`, {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
+        headers: await baseHeaders()
       });
-
       if (!res.ok) {
         document.cookie = 'sarana-note-app-auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
         document.cookie = 'user_email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
         throw new Error('Invalid token');
       }
+      const response = await res.json();
+      return response.data;
     },
+    enabled: !!getAuthCookie(),
     retry: false,
     staleTime: Infinity,
   });
