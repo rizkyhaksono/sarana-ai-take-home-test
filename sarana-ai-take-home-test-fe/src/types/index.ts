@@ -41,6 +41,7 @@ export interface RegisterRequest {
 export interface CreateNoteRequest {
   title: string;
   content: string;
+  image?: File;
 }
 
 // API Response Types
@@ -81,6 +82,7 @@ export interface PaginatedResponse<T> {
 export interface NotesData {
   notes: Note[];
   page: number;
+  total: number;
   per_page: number;
   total_pages: number;
   total_items: number;
@@ -97,7 +99,7 @@ export interface LogsData {
   page: number;
   per_page: number;
   total_pages: number;
-  total_items: number;
+  total: number;
 }
 
 export interface LogsResponse {
