@@ -30,7 +30,7 @@ definitions:
       headers:
         type: string
       id:
-        type: integer
+        type: string
       method:
         type: string
       request_body:
@@ -216,7 +216,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -351,7 +351,7 @@ paths:
         type: string
       - description: Optional image file
         in: formData
-        name: image_path
+        name: image
         type: file
       produces:
       - application/json
@@ -472,6 +472,66 @@ paths:
       security:
       - BearerAuth: []
       summary: Get a note by ID
+      tags:
+      - Notes
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update a specific note by its ID with optional image upload
+      parameters:
+      - description: Note ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Note title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Note content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: Optional image file
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Note updated successfully
+          schema:
+            $ref: '#/definitions/models.Note'
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Note not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update a note
       tags:
       - Notes
   /notes/{id}/image:
