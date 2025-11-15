@@ -19,7 +19,7 @@ services:
   backend:
     build:
       context: ./sarana-ai-take-home-test-be
-      dockerfile: ../sarana-ai-take-home-test-misc/Dockerfile.be
+      dockerfile: ./sarana-ai-take-home-test-misc/Dockerfile.be
     container_name: sarana-notes-be
     ports:
       - "8080:8080"
@@ -40,7 +40,7 @@ services:
   frontend:
     build:
       context: ./sarana-ai-take-home-test-fe
-      dockerfile: ../sarana-ai-take-home-test-misc/Dockerfile.fe
+      dockerfile: ./sarana-ai-take-home-test-misc/Dockerfile.fe
     container_name: sarana-notes-fe
     ports:
       - "3000:3000"
