@@ -78,6 +78,7 @@ Full-stack Notes Application with Authentication, CRUD Operations, Image Upload,
 - `POST /notes` - Create a new note
 - `GET /notes` - Get all notes for the authenticated user
 - `GET /notes/:id` - Get a specific note
+- `PUT /notes/:id` - Update a note
 - `DELETE /notes/:id` - Delete a note (with ownership check)
 - `POST /notes/:id/image` - Upload an image for a note
 
@@ -323,16 +324,12 @@ docker-compose logs -f backend
 
 ## Future Enhancements
 
-- Update note functionality
-- Note search and filtering
 - Tags and categories
-- User profile management
 - Refresh token implementation
 - Rate limiting
-- API documentation with Swagger
 - Unit and integration tests
 - CI/CD pipeline
 
 ## License
 
-This project is for take-home test purposes.
+This project under the MIT License. See the [LICENSE](LICENSE) file for details.
