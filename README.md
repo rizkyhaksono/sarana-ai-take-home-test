@@ -2,6 +2,11 @@
 
 Full-stack Notes Application with Authentication, CRUD Operations, Image Upload, and Logging.
 
+## Deployment
+- [Frontend](https://sarana-fe.nateon.io)
+- [Backend API (Scalar)](https://sarana-be.nateon.io/docs)
+- [Backend API (Swagger)](https://sarana-be.nateon.io/swagger/index.html)
+
 ## Tech Stack
 
 ### Backend (sarana-ai-take-home-test-be)
