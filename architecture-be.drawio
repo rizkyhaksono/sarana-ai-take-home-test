@@ -1,0 +1,230 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0" version="29.0.3">
+  <diagram name="Page-1" id="gNf-zoAq6wT4T6lUyUET">
+    <mxGraphModel dx="2026" dy="1189" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="Public Routes" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="8" y="60" width="168" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="/uploads" style="rounded=1;arcSize=20;strokeWidth=2" parent="2" vertex="1">
+          <mxGeometry x="46" y="43" width="93" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="API Documentation" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="226" y="60" width="312" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="Swagger" style="rounded=1;arcSize=20;strokeWidth=2" parent="4" vertex="1">
+          <mxGeometry x="46" y="43" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="Scalar" style="rounded=1;arcSize=20;strokeWidth=2" parent="4" vertex="1">
+          <mxGeometry x="210" y="43" width="73" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=-0.01;entryY=0.5;" parent="4" source="5" target="6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8" value="Logging Service" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="589" y="8" width="1028" height="228" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="Main.go" style="rounded=1;arcSize=20;strokeWidth=2" parent="8" vertex="1">
+          <mxGeometry x="46" y="95" width="86" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="Routes" style="rounded=1;arcSize=20;strokeWidth=2" parent="8" vertex="1">
+          <mxGeometry x="357" y="43" width="78" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="Handlers" style="rounded=1;arcSize=20;strokeWidth=2" parent="8" vertex="1">
+          <mxGeometry x="575" y="43" width="93" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="Services" style="rounded=1;arcSize=20;strokeWidth=2" parent="8" vertex="1">
+          <mxGeometry x="742" y="43" width="88" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="JWT" style="rounded=1;arcSize=20;strokeWidth=2" parent="8" vertex="1">
+          <mxGeometry x="938" y="43" width="61" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="PostgreSQL Database" style="whiteSpace=wrap;strokeWidth=2;" parent="8" vertex="1">
+          <mxGeometry x="291" y="147" width="209" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.16;entryX=-0.01;entryY=0.5;" parent="8" source="9" target="10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0;entryY=0.5;" parent="8" source="10" target="11" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="17" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0.01;entryY=0.5;" parent="8" source="11" target="12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" value="Uses" style="curved=1;startArrow=none;endArrow=block;exitX=1.01;exitY=0.5;entryX=0;entryY=0.5;" parent="8" source="12" target="13" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="19" value="Connects to" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.84;entryX=0;entryY=0.5;" parent="8" source="9" target="14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="174" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="20" value="Note Service" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="589" y="270" width="1028" height="228" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="Main.go" style="rounded=1;arcSize=20;strokeWidth=2" parent="20" vertex="1">
+          <mxGeometry x="46" y="95" width="86" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="Routes" style="rounded=1;arcSize=20;strokeWidth=2" parent="20" vertex="1">
+          <mxGeometry x="357" y="43" width="78" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="Handlers" style="rounded=1;arcSize=20;strokeWidth=2" parent="20" vertex="1">
+          <mxGeometry x="575" y="43" width="93" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="24" value="Services" style="rounded=1;arcSize=20;strokeWidth=2" parent="20" vertex="1">
+          <mxGeometry x="742" y="43" width="88" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="JWT" style="rounded=1;arcSize=20;strokeWidth=2" parent="20" vertex="1">
+          <mxGeometry x="938" y="43" width="61" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="PostgreSQL Database" style="whiteSpace=wrap;strokeWidth=2;" parent="20" vertex="1">
+          <mxGeometry x="291" y="147" width="209" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.16;entryX=-0.01;entryY=0.5;" parent="20" source="21" target="22" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0;entryY=0.5;" parent="20" source="22" target="23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="29" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0.01;entryY=0.5;" parent="20" source="23" target="24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="30" value="Uses" style="curved=1;startArrow=none;endArrow=block;exitX=1.01;exitY=0.5;entryX=0;entryY=0.5;" parent="20" source="24" target="25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="31" value="Connects to" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.84;entryX=0;entryY=0.5;" parent="20" source="21" target="26" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="174" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="32" value="User Service" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="589" y="540" width="1028" height="228" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="Main.go" style="rounded=1;arcSize=20;strokeWidth=2" parent="32" vertex="1">
+          <mxGeometry x="46" y="95" width="86" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="34" value="Routes" style="rounded=1;arcSize=20;strokeWidth=2" parent="32" vertex="1">
+          <mxGeometry x="357" y="43" width="78" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="35" value="Handlers" style="rounded=1;arcSize=20;strokeWidth=2" parent="32" vertex="1">
+          <mxGeometry x="575" y="43" width="93" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="36" value="Services" style="rounded=1;arcSize=20;strokeWidth=2" parent="32" vertex="1">
+          <mxGeometry x="742" y="43" width="88" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="37" value="JWT" style="rounded=1;arcSize=20;strokeWidth=2" parent="32" vertex="1">
+          <mxGeometry x="938" y="43" width="61" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="38" value="PostgreSQL Database" style="whiteSpace=wrap;strokeWidth=2;" parent="32" vertex="1">
+          <mxGeometry x="291" y="147" width="209" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="39" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.16;entryX=-0.01;entryY=0.5;" parent="32" source="33" target="34" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="40" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0;entryY=0.5;" parent="32" source="34" target="35" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0.01;entryY=0.5;" parent="32" source="35" target="36" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="42" value="Uses" style="curved=1;startArrow=none;endArrow=block;exitX=1.01;exitY=0.5;entryX=0;entryY=0.5;" parent="32" source="36" target="37" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="43" value="Connects to" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.84;entryX=0;entryY=0.5;" parent="32" source="33" target="38" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="174" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="44" value="Authentication Service" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="589" y="810" width="1028" height="228" as="geometry" />
+        </mxCell>
+        <mxCell id="45" value="Main.go" style="rounded=1;arcSize=20;strokeWidth=2" parent="44" vertex="1">
+          <mxGeometry x="46" y="95" width="86" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="46" value="Routes" style="rounded=1;arcSize=20;strokeWidth=2" parent="44" vertex="1">
+          <mxGeometry x="357" y="43" width="78" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="47" value="Handlers" style="rounded=1;arcSize=20;strokeWidth=2" parent="44" vertex="1">
+          <mxGeometry x="575" y="43" width="93" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="48" value="Services" style="rounded=1;arcSize=20;strokeWidth=2" parent="44" vertex="1">
+          <mxGeometry x="742" y="43" width="88" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="49" value="JWT" style="rounded=1;arcSize=20;strokeWidth=2" parent="44" vertex="1">
+          <mxGeometry x="938" y="43" width="61" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="50" value="PostgreSQL Database" style="whiteSpace=wrap;strokeWidth=2;" parent="44" vertex="1">
+          <mxGeometry x="291" y="147" width="209" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.16;entryX=-0.01;entryY=0.5;" parent="44" source="45" target="46" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="52" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0;entryY=0.5;" parent="44" source="46" target="47" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="53" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.5;entryX=0.01;entryY=0.5;" parent="44" source="47" target="48" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="54" value="Uses" style="curved=1;startArrow=none;endArrow=block;exitX=1.01;exitY=0.5;entryX=0;entryY=0.5;" parent="44" source="48" target="49" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="55" value="Connects to" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.84;entryX=0;entryY=0.5;" parent="44" source="45" target="50" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="211" y="174" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
