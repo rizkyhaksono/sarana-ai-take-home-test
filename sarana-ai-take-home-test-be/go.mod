@@ -9,7 +9,9 @@ require (
 	github.com/grafana/loki-client-go v0.0.0-20251015150631-c42bbddc310a
 	github.com/lib/pq v1.10.9
 	github.com/prometheus/common v0.34.0
-	golang.org/x/crypto v0.44.0
+	github.com/swaggo/fiber-swagger v1.3.0
+	github.com/swaggo/swag v1.16.6
+	golang.org/x/crypto v0.45.0
 )
 
 require (
@@ -57,9 +59,7 @@ require (
 	github.com/prometheus/prometheus v0.35.0 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/stretchr/testify v1.11.1 // indirect
-	github.com/swaggo/fiber-swagger v1.3.0 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
-	github.com/swaggo/swag v1.16.6 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.68.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
